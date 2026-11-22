@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>エコキュート交換の見積チェック:項目の抜け・補助金・総額の位置を確かめる | 家の理科</title>
+<meta name="description" content="エコキュート交換の見積書の数字を入れると、項目の抜け、補助金の見込み額と期限、総額の位置、業者に聞くべき質問を出します。入力はブラウザの中だけで計算し、送信しません。">
+<link rel="canonical" href="https://ienorika.com/tools/mitsumori-check/">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="logo" href="/">家の理科<small>電気とお湯のコストを仕組みから</small></a>
+  <nav><a href="/tools/mitsumori-check/">見積チェック</a><a href="/about/">運営者</a></nav>
+</div></header>
+
+<main><div class="wrap">
+<p class="meta"><span class="tag">計算機</span>試作版 ／ 補助金の情報は2026年11月20日時点</p>
+<h1>エコキュート交換の見積チェック</h1>
+<div class="lead">見積書を手元に置いて、分かる所だけ入れてください。項目の抜け、補助金の見込み額、総額の位置、業者に聞くべき質問を出します。<strong>入力した内容はこのページの中だけで計算し、どこにも送りません。</strong></div>
+
+<div class="box calc">
+  <div class="row">
+    <div>
+      <label for="total">見積の総額(税込、円)<span class="hint">補助金を引く前の金額を、万円ではなく円で入れてください</span></label>
+      <input type="number" id="total" placeholder="例:520000" min="0" step="1000">
+    </div>
+    <div>
+      <label for="list">本体の希望小売価格(円、任意)<span class="hint">カタログの「セット価格」など。工事費は含まない数字です</span></label>
+      <input type="number" id="list" placeholder="例:1000000" min="0" step="1000">
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="old">今ついている給湯器</label>
+      <select id="old">
+        <option value="ecocute">エコキュート</option>
+        <option value="denki">電気温水器</option>
+        <option value="gas">ガス・石油の給湯器</option>
+      </select>
+    </div>
+    <div>
+      <label for="how">業者と出会ったきっかけ</label>
+      <select id="how">
+        <option value="self">自分で探して依頼した</option>
+        <option value="visit">突然の訪問・点検</option>
+        <option value="phone">突然の電話</option>
+      </select>
+    </div>
+  </div>
+
+  <label>見積書に書かれている項目(あるものに印)</label>
+  <div class="checks" id="items">
+    <label><input type="checkbox" value="本体(貯湯タンクとヒートポンプ)"> 本体(貯湯タンクとヒートポンプ)</label>
+    <label><input type="checkbox" value="リモコン(台所・浴室)"> リモコン(台所・浴室)</label>
+    <label><input type="checkbox" value="脚部カバー"> 脚部カバー</label>
+    <label><input type="checkbox" value="基礎(タンクの土台)"> 基礎(タンクの土台)</label>
+    <label><input type="checkbox" value="配管工事(給水・給湯・追い焚き)"> 配管工事(給水・給湯・追い焚き)</label>
+    <label><input type="checkbox" value="電気工事(200V・ブレーカー)"> 電気工事(200V・ブレーカー)</label>
+    <label><input type="checkbox" value="今の給湯器の撤去と処分"> 今の給湯器の撤去と処分</label>
+    <label><input type="checkbox" value="運搬・出張・諸経費"> 運搬・出張・諸経費</label>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="subsidy">見積の機種は補助金の対象か<span class="hint">分からなければ、業者に型番で「給湯省エネ2026事業の対象か、性能加算はあるか」を聞いてください</span></label>
+      <select id="subsidy">
+        <option value="unknown">分からない</option>
+        <option value="base">対象(基本のみ)</option>
+        <option value="plus">対象(性能加算あり)</option>
+        <option value="no">対象外</option>
+      </select>
+    </div>
+    <div>
+      <label for="applied">補助金は見積から差し引かれているか</label>
+      <select id="applied">
+        <option value="unknown">分からない</option>
+        <option value="yes">差し引かれている</option>
+        <option value="no">差し引かれていない</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="chikunetsu">同時に撤去する電気蓄熱暖房機(台)<span class="hint">ない場合は0</span></label>
+      <select id="chikunetsu"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select>
+    </div>
+    <div>
+      <label for="start">工事の予定日(任意)</label>
+      <input type="date" id="start">
+    </div>
+  </div>
+
+  <br><button type="button" id="run">チェックする</button>
+
+  <div class="result" id="out">
+    <h3>1. 総額の位置</h3>
+    <div id="o-pos"></div>
+    <h3>2. 補助金</h3>
+    <div id="o-sub"></div>
+    <h3>3. 業者に確かめること</h3>
+    <ol id="o-q"></ol>
+    <div id="o-visit"></div>
+  </div>
+</div>
+
+<h2>このチェックの根拠</h2>
+<ul>
+<li><strong>総額の位置</strong>:ある交換業者が公開している自社の2023年1〜6月の販売実績では、工事費込みの総額は40万〜50万円未満が57%、50万〜60万円未満が26%、60万〜70万円未満が11%、30万〜40万円未満が4%でした。<sup><a href="#s1">[1]</a></sup>1社の約3年前のデータなので、地域や機種によってずれ、今は高めにずれている可能性があります。残り2%の区間は出典に書かれていません。</li>
+<li><strong>補助金</strong>:国の「給湯省エネ2026事業」は、エコキュート1台に基本7万円、性能の高い機種は3万円加算、電気温水器の撤去は2万円、電気蓄熱暖房機の撤去は1台4万円(2台まで)加算です。エコキュートの撤去は加算の対象外です。<sup><a href="#s2">[2]</a></sup>予算に達したら受付終了で、2026年11月20日時点の使用は全体で約60%、撤去の加算分で約30%でした。<sup><a href="#s3">[3]</a></sup>申請の受付は遅くとも2026年12月31日までで、申請は工事の完了後に出します。締切間際は書類の不備を直す機会が足りなくなることがあります。<sup><a href="#s4">[4]</a></sup>申請は利用者ではなく、事業に登録された工事業者が行います。<sup><a href="#s5">[5]</a></sup></li>
+<li><strong>訪問販売</strong>:特定商取引法の訪問販売や電話勧誘販売にあたる場合、契約書面を受け取った日から8日間はクーリング・オフができます(条件によってはできない場合があります)。<sup><a href="#s6">[6]</a></sup>迷ったら消費者ホットライン188に相談できます。</li>
+</ul>
+<p>電気代そのものが気になる場合は、<a href="/articles/ecocute-denkidai-takai/">エコキュートの電気代が高いときの確かめ方</a>をどうぞ。</p>
+
+<h2>出典</h2>
+<ol class="sources">
+<li id="s1"><a href="https://www.sunrefre.jp/ecocute/price/">交換できるくん「エコキュートの交換費用相場」(同社の2023年1〜6月の販売実績)</a></li>
+<li id="s2"><a href="https://kyutou-shoene2026.meti.go.jp/overview/">給湯省エネ2026事業「対象要件・補助額」</a></li>
+<li id="s3"><a href="https://kyutou-shoene2026.meti.go.jp/">給湯省エネ2026事業 公式サイト(予算の執行状況)</a></li>
+<li id="s4"><a href="https://kyutou-shoene2026.meti.go.jp/news/2026110601.html">給湯省エネ2026事業「交付申請の受付期限について」(2026年11月6日)</a></li>
+<li id="s5"><a href="https://kadenfan.hitachi.co.jp/kyutou/hojokin/">日立「給湯省エネ2026事業」(申請手続きの説明)</a></li>
+<li id="s6"><a href="https://www.kokusen.go.jp/soudan_now/data/coolingoff.html">国民生活センター「クーリング・オフ」</a></li>
+</ol>
+<p class="small">「エコキュート」は関西電力株式会社の登録商標です。このチェックは見積の妥当性を保証するものではありません。契約の判断はご自身で行ってください。</p>
+</div></main>
+
+<footer class="site"><div class="wrap">
+<p>家の理科 ― 電気とお湯のコストを、理系の目で仕組みから。 <a href="/about/">運営者情報</a> ・ <a href="/privacy/">プライバシーポリシー</a></p>
+</div></footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var ALL=['本体(貯湯タンクとヒートポンプ)','リモコン(台所・浴室)','脚部カバー','基礎(タンクの土台)','配管工事(給水・給湯・追い焚き)','電気工事(200V・ブレーカー)','今の給湯器の撤去と処分','運搬・出張・諸経費'];
+  // 1社の2023年1〜6月の販売実績(万円の区間, 割合%)。合計98%
+  var DIST=[[30,40,4],[40,50,57],[50,60,26],[60,70,11]];
+  var CLOSED=new Date('2027-01-01T00:00:00'); // 給湯省エネ2026事業の受付は遅くとも2026-12-31まで
+  var counted=false;
+  function man(n){ return (Math.round(n/1000)/10).toLocaleString('ja-JP')+'万円'; }
+  function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+  $('run').addEventListener('click',function(){
+    var total=+$('total').value, list=+$('list').value, old=$('old').value, how=$('how').value,
+        sub=$('subsidy').value, applied=$('applied').value, start=$('start').value, chiku=+$('chikunetsu').value;
+    var checked=[].map.call(document.querySelectorAll('#items input:checked'),function(x){return x.value;});
+    var missing=ALL.filter(function(v){return checked.indexOf(v)<0;});
+    var q=[], now=new Date(), closed=now>=CLOSED;
+
+    // 1. 総額の位置
+    var pos='';
+    if(total>0 && total<10000){
+      pos='<p>金額は万円ではなく円で入れてください(例:52万円なら 520000)。</p>';
+    } else if(total>0){
+      var m=total/10000, below=0, band=null;
+      DIST.forEach(function(d){ if(m>=d[1]) below+=d[2]; else if(m>=d[0]) band=d; });
+      if(m<30) pos='<p>総額 '+man(total)+' は、参考にした1社の実績の範囲(30万円〜)より<strong>低い</strong>です。安いこと自体は問題ありませんが、工事の範囲が狭くないか、下の質問で確かめてください。</p>';
+      else if(m>=70) pos='<p>総額 '+man(total)+' は、参考にした1社の実績の範囲(〜70万円未満)より<strong>高い</strong>です。機種のグレード(フルオート、容量460Lなど)か追加工事が理由かを、内訳で確かめてください。</p>';
+      else pos='<p>総額 '+man(total)+' は、参考にした1社の販売実績で<strong>'+band[0]+'万〜'+band[1]+'万円未満</strong>の区間(全体の'+band[2]+'%)に入ります。この区間より安い区間は合計'+below+'%でした。</p>';
+      if(list>0){
+        var r=Math.round((1-total/list)*100);
+        pos+='<p>希望小売価格 '+man(list)+' に対して、工事費込みの総額で '+(r>=0? r+'% 低い':(-r)+'% 高い')+' 計算です。'
+          +(r<0?' 工事費込みでも希望小売価格を超えています。値引きがないか、高い工事が含まれていないか確かめてください。':'')+'</p>';
+      }
+      pos+='<p class="small">比べた分布は1社の2023年1〜6月の販売実績です。約3年前のデータで、地域・機種・設置条件でずれます。</p>';
+    } else pos='<p>総額を入れると位置を出します。</p>';
+    $('o-pos').innerHTML=pos;
+
+    // 2. 補助金
+    var s='';
+    if(closed){
+      s='<p>給湯省エネ2026事業の受付は2026年12月31日までに終わっています。新しい年度の制度は公式サイトで確かめてください。</p>';
+    } else {
+      var amt=0;
+      if(sub==='base') amt=7; else if(sub==='plus') amt=10;
+      var extra=(old==='denki'?2:0)+chiku*4;
+      if(sub==='no') s='<p>対象外の機種です。補助金は使えません。対象機種にすると補助金でいくら変わるか、業者に聞く価値があります。</p>';
+      else if(amt>0) s='<p>見込み額:<span class="big">'+(amt+extra)+'万円</span>'+(extra?'(撤去の加算'+extra+'万円を含む)':'')+'</p>';
+      else s='<p>機種が対象か分からない場合、基本7万円・性能加算ありで10万円が目安です'+(extra?'(ほかに撤去の加算'+extra+'万円)':'')+'。</p>';
+      if(old==='ecocute') s+='<p class="small">エコキュートからの交換では、エコキュート撤去の加算はありません。</p>';
+      if(sub!=='no'){
+        if(applied!=='yes') q.push('補助金(給湯省エネ2026事業)は見積から差し引かれますか。差し引かれない場合、いつ・どうやって戻りますか');
+        q.push('御社は給湯省エネ2026事業の登録事業者ですか(申請は登録事業者しかできません)');
+        var warn='<div class="box warn"><p><strong>期限に注意:</strong>予算に達したら受付終了です(2026年11月20日時点で全体の約60%使用)。申請の受付は遅くとも2026年12月31日までで、申請は工事の完了後に出します。';
+        if(start){
+          var d=new Date(start+'T00:00:00');
+          if(d<new Date('2025-11-28T00:00:00')) warn+=' 工事日が2025年11月28日より前だと、この事業の対象外です。';
+          else if(d>=CLOSED) warn+=' 工事予定日が2027年以降なので、<strong>この補助金には間に合わない</strong>可能性が高いです。来年度の制度は未定です。';
+          else if(d>=new Date('2026-12-15T00:00:00')) warn+=' 工事が12月中旬以降だと、完了後の申請が<strong>締切に間に合わないおそれ</strong>があります。業者に申請の予定日を確かめてください。';
+        }
+        warn+='</p></div>';
+        s+=warn;
+      }
+    }
+    $('o-sub').innerHTML=s;
+
+    // 3. 質問
+    missing.forEach(function(v){
+      q.push('「'+v+'」が見積にありません。総額に含まれていますか。別にかかる場合はいくらですか');
+    });
+    q.push('当日に追加の費用がかかる可能性がある工事はありますか。あるなら、どの条件でいくらですか');
+    q.push('本体と工事の保証はそれぞれ何年ですか');
+    $('o-q').innerHTML=q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
+
+    // 訪問販売
+    var v='';
+    if(how!=='self') v='<div class="box warn"><p><strong>突然の訪問・電話がきっかけの場合:</strong>特定商取引法の訪問販売や電話勧誘販売にあたれば、契約書面を受け取った日から8日間はクーリング・オフができます(条件によってはできない場合があります)。その場で決めず、別の業者の見積と比べてください。迷ったら消費者ホットライン188へ。</p></div>';
+    $('o-visit').innerHTML=v;
+
+    $('out').classList.add('show');
+    if(!counted){ counted=true; try{ history.pushState(null,'',location.pathname+'?check=1'); }catch(e){} }
+  });
+})();
+</script>
+</body>
+</html>

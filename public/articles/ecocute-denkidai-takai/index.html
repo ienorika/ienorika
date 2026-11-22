@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>エコキュートの電気代が高い? 熱の計算で「正常な範囲か」を確かめる | 家の理科</title>
+<meta name="description" content="エコキュートの電気代が高いと感じたら、まず必要な熱量を計算して正常な範囲かを確かめます。冬に倍近くなる理由、料金単価・プラン・設定・故障の見分け方を、理系の運営者が出典つきで解説。計算機つき。">
+<link rel="canonical" href="https://ienorika.com/articles/ecocute-denkidai-takai/">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="logo" href="/">家の理科<small>電気とお湯のコストを仕組みから</small></a>
+  <nav><a href="/tools/mitsumori-check/">見積チェック</a><a href="/about/">運営者</a></nav>
+</div></header>
+
+<main><div class="wrap">
+<article>
+<p class="meta"><span class="tag">エコキュート</span><span class="tag">電気代</span>公開 2026年11月22日 ／ 料金の数字は2026年11月22日時点</p>
+<h1>エコキュートの電気代が高い? 熱の計算で「正常な範囲か」を確かめる</h1>
+
+<div class="lead">
+<p><strong>結論:</strong>冬にエコキュートの電気代が夏の2倍近くになるのは、多くの場合は故障ではなく、水の温度という物理の条件で説明がつきます。水道水が冷たい冬は、同じ量のお湯を作るのに必要な熱が約2倍になるからです。まず下の計算機で「あなたの家の給湯分はいくらのはずか」を出し、それより大きく外れていたら、料金単価・契約プラン・設定・故障の順に疑ってください。</p>
+</div>
+
+<h2>まず相場:4人家族で年4万円前後</h2>
+<p>メーカーの試算では、4人家族(1日460L、40℃換算)・東京電力エリアの「スマートライフL」で、エコキュートの給湯にかかる電気代は年間<strong>約4.0万〜4.4万円</strong>です(三菱電機の試算。料金単価は2025年12月時点、機種により異なる)。<sup><a href="#s1">[1]</a></sup>月にならすと約3,300〜3,700円ですが、これは<strong>年間の平均</strong>です。実際には夏に安く、冬に高くなります。</p>
+<p>「電気代が高い」と感じたときに比べるべき相手は、年平均ではなく<strong>その月の水温で計算した値</strong>です。</p>
+
+<h2>計算機:今月の給湯分はいくらのはずか</h2>
+<div class="box calc" id="calc">
+  <div class="row">
+    <div>
+      <label for="people">家族の人数<span class="hint">1人あたり1日115Lで計算(メーカー試算の4人460Lを人数で割った値)。お風呂の湯張りは人数で変わらないので、1〜2人の家は多めに直してください</span></label>
+      <input type="number" id="people" value="4" min="1" max="10" step="1">
+    </div>
+    <div>
+      <label for="liters">1日のお湯の量(40℃換算、L)<span class="hint">人数から自動で入ります。分かれば直してください</span></label>
+      <input type="number" id="liters" value="460" min="50" max="1500" step="10">
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="tw">水道水の温度(℃)<span class="hint">冬は8℃前後、夏は24℃前後が目安(推測)。台所の水を温度計で測ると確実です</span></label>
+      <input type="number" id="tw" value="8" min="0" max="35" step="0.5">
+    </div>
+    <div>
+      <label for="eta">年間給湯保温効率(カタログ値)<span class="hint">本体のラベルか取扱説明書に「年間給湯保温効率(JIS)」として書かれた数字。分からなければ3.5</span></label>
+      <input type="number" id="eta" value="3.5" min="1" max="5" step="0.1">
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="pnight">夜の1kWhあたりの単価(円)<span class="hint">初期値は東京電力スマートライフの夜間27.91円(2026年11月1日改定後)+再エネ賦課金4.18円。燃料費調整と国の値引きは含みません</span></label>
+      <input type="number" id="pnight" value="32.09" min="5" max="80" step="0.01">
+    </div>
+    <div>
+      <label for="pday">昼の1kWhあたりの単価(円)<span class="hint">同じく昼間35.81円+4.18円</span></label>
+      <input type="number" id="pday" value="39.99" min="5" max="80" step="0.01">
+    </div>
+  </div>
+  <label for="dayshare">昼に沸き増しする割合(%)<span class="hint">東京電力スマートライフで安いのは午前1時〜6時の5時間だけです。冬はこの時間で沸かし切れないことがあるので、10〜30でも試してください(推測)</span></label>
+  <input type="number" id="dayshare" value="0" min="0" max="100" step="5">
+  <label for="bill">検針票の今月の使用量(kWh、任意)<span class="hint">入れると家全体のうち給湯が何割かを出します</span></label>
+  <input type="number" id="bill" value="" min="0" max="5000" step="1" placeholder="例:650">
+  <br><button type="button" id="run">計算する</button>
+  <p class="small">入力した数字はこのページの中だけで計算し、どこにも送りません。結果は目安で、故障の診断ではありません。</p>
+
+  <div class="result" id="out">
+    <p>給湯に必要な熱:1日 <strong id="o-heat"></strong> kWh</p>
+    <p>今月の給湯分の電気代(30日):</p>
+    <p class="big" id="o-yen"></p>
+    <p class="small" id="o-kwh"></p>
+    <table class="bars" aria-label="夏と今の比較">
+      <tr><td style="width:7rem">夏(水温24℃)</td><td><div class="bar" id="b-summer"></div></td><td class="num" id="t-summer"></td></tr>
+      <tr><td>入力した水温</td><td><div class="bar" id="b-now"></div></td><td class="num" id="t-now"></td></tr>
+    </table>
+    <p id="o-share"></p>
+    <p class="small">幅の下側はカタログ値どおりの効率、上側は効率がその8割まで落ちた場合です。冬は外気が冷たく効率が下がるため、上側に寄りやすいと考えています(推測)。</p>
+  </div>
+</div>
+
+<h2>原因1:冬は必要な熱が2倍になる</h2>
+<p>お湯を作るのに必要な熱は、温める水の量と、上げる温度の幅で決まります。</p>
+<p class="formula">必要な熱(kWh) = 水の量(L) × 4.186 × (40℃ − 水道水の温度) ÷ 3600</p>
+<p>4.186は水1Lを1℃上げる熱(kJ)です。4人家族の460Lで計算すると、水温24℃の夏は1日約8.6kWh、水温8℃の冬は約17.1kWhです。<strong>上げる温度の幅が16℃から32℃に倍になるので、熱もちょうど倍</strong>になります。</p>
+<p>エコキュートは空気の熱を集める仕組みなので、外気が冷たい冬は効率も落ちます。熱が2倍、効率が少し下がる、の掛け算で、冬の給湯の電気代が夏の2倍を超えるのは不思議ではありません。</p>
+<div class="box ok">
+<p><strong>検算:</strong>この式で夏(24℃)と冬(8℃)の平均をとり、効率3.5で365日分を出すと、年約1,340kWhです。再エネ賦課金を含む単価(32.09円)なら約4.3万円、含まない単価(27.91円)なら約3.7万円です。メーカー試算(年4.0万〜4.4万円)が賦課金を含むかは書かれていませんが、どちらで比べても試算の前後に収まります。式の組み立ては大きく外れていないと判断しています。</p>
+</div>
+
+<h2>原因2:電気そのものの値段が動いている</h2>
+<p>機械が同じでも、1kWhの値段が上がれば請求額は上がります。検針票で次の3つを確かめてください。</p>
+<ul>
+<li><strong>再エネ賦課金</strong>:2026年度(2026年5月検針分〜2027年4月検針分)は1kWhあたり4.18円です。<sup><a href="#s2">[2]</a></sup>使用量が多いオール電化の家ほど影響が大きくなります。</li>
+<li><strong>燃料費調整額</strong>:燃料の輸入価格に合わせて毎月変わります。<sup><a href="#s3">[3]</a></sup></li>
+<li><strong>国の値引きがあるか</strong>:この冬は、2026年12月使用分が1kWhあたり1.0円、2027年1月・2月使用分が4.5円値引きされます(東京電力エナジーパートナーの発表)。<sup><a href="#s4">[4]</a></sup>値引きが終わった月は、同じ使い方でも請求が上がって見えます。</li>
+</ul>
+
+<h2>原因3:夜が安いプランになっていない</h2>
+<p>エコキュートは電気が安い夜にまとめてお湯を沸かす前提で作られています。夜が安くない料金プランのままだと、この前提が崩れます。検針票のプラン名を見て、夜間の単価が設定されたプランか確かめてください。</p>
+<p>なお、夜の安さは昔ほど大きくありません。東京電力の「スマートライフ」は2026年11月1日の改定後で昼35.81円・夜27.91円で、<strong>夜は昼より約22%安いだけ</strong>です。<sup><a href="#s5">[5]</a></sup>「夜に沸かすから電気代はほとんどかからない」というイメージで比べると、高く感じやすくなっています。</p>
+
+<h2>原因4:設定と使い方</h2>
+<p>同じ家族でも、設定で使う熱は変わります。</p>
+<ul>
+<li><strong>昼の沸き増し</strong>:湯切れしそうになると昼にも沸かします。昼は単価が高いので、その分だけ高くなります。<sup><a href="#s5">[5]</a></sup>計算機の「昼に沸き増しする割合」を動かすと影響の大きさが分かります。</li>
+<li><strong>沸かす量の設定</strong>:冬に「多め」にした設定を夏も続けていると、使わないお湯まで沸かしてタンクで冷ますことになります。電力比較サイトの解説でも、季節ごとの見直しを勧めています。<sup><a href="#s6">[6]</a></sup></li>
+<li><strong>追い焚き・保温</strong>:冷めたお湯を温め直すより、高温のお湯を足すほうが効率がよいとメーカーが案内しています。<sup><a href="#s7">[7]</a></sup></li>
+<li><strong>留守中</strong>:旅行などで数日使わないときは、休止モードで沸かすのを止められます。<sup><a href="#s7">[7]</a></sup></li>
+</ul>
+
+<h2>原因5:故障や水漏れ</h2>
+<p>計算機の値より明らかに高く、プランも設定も問題ないなら、機械を疑います。目安は次のとおりです。</p>
+<ul>
+<li>お湯を使っていないのに、残りのお湯の表示がどんどん減る</li>
+<li>昼に長い時間沸かし続けている</li>
+<li>沸かしていないときに、タンクの下が濡れている</li>
+</ul>
+<p>三菱電機は、こうした場合にリモコンで使った湯量を確認し、水漏れがあれば工事店か販売店に連絡するよう案内しています。<sup><a href="#s8">[8]</a></sup></p>
+
+<h2>「買い替えれば安くなる」は元が取れるか</h2>
+<p>電気代が高いと、新しい機種への買い替えを勧められることがあります。数字で確かめておきます。</p>
+<ul>
+<li>三菱電機の試算では、2014年モデルから現行モデルに替えた場合の差は、中部電力エリアの4人家族で<strong>年約6,500円</strong>です。<sup><a href="#s9">[9]</a></sup></li>
+<li>交換の総額は、ある交換業者の2023年1〜6月の販売実績で40万〜50万円未満が57%、50万〜60万円未満が26%でした。<sup><a href="#s10">[10]</a></sup></li>
+</ul>
+<p>この2つを並べると、まだ動くエコキュートを電気代の差だけで回収するには<strong>60年以上かかる</strong>計算で、機械の寿命を超えます。買い替えは、故障や寿命がきっかけになったときに考えるのが現実的です。</p>
+<p>買い替えるなら補助金を確認してください。国の「給湯省エネ2026事業」では、エコキュート1台に基本7万円、性能の高い機種は3万円が加算され、電気温水器を撤去する場合はさらに2万円です(エコキュートの撤去は加算なし)。<sup><a href="#s11">[11]</a></sup>予算の使用は2026年11月20日時点で約60%で、予算に達したら受付終了です。<sup><a href="#s12">[12]</a></sup>申請の受付は遅くとも2026年12月31日までで、締切間際は書類の不備を直す機会が足りなくなることがあると事務局が注意しています。<sup><a href="#s13">[13]</a></sup>申請は利用者ではなく、登録された工事業者が行います。</p>
+<p>見積書を受け取ったら、<a href="/tools/mitsumori-check/">見積チェック</a>で項目の抜けと補助金の反映を確かめられます。</p>
+
+<h2>確かめる順番</h2>
+<ol>
+<li>台所の水の温度を測り、上の計算機で今月の給湯分を出す</li>
+<li>検針票の使用量(kWh)を入れて、給湯が家全体の何割かを見る。給湯以外(暖房など)が大きいなら、エコキュート以外も確かめてください</li>
+<li>検針票で料金プラン、再エネ賦課金、燃料費調整額、値引きの有無を見る</li>
+<li>リモコンで沸かす量の設定と、昼の沸き増しの回数を見る</li>
+<li>それでも合わなければ、残湯表示とタンクの下を確認し、販売店かメーカーに相談する</li>
+</ol>
+
+<h2>出典</h2>
+<ol class="sources">
+<li id="s1"><a href="https://www.mitsubishielectric.co.jp/home/ecocute/introduction/pdf/cost-tepco.pdf">三菱電機「三菱エコキュート ランニングコスト(東京電力エナジーパートナー スマートライフL)」</a></li>
+<li id="s2"><a href="https://www.meti.go.jp/press/2025/03/20260319004/20260319004.html">経済産業省「再生可能エネルギーのFIT制度・FIP制度における2026年度以降の買取価格等と2026年度の賦課金単価を設定します」(2026年3月19日)</a></li>
+<li id="s3"><a href="https://www.tepco.co.jp/ep/private/plan/smartlife/">東京電力エナジーパートナー「スマートライフ(オール電化)」</a></li>
+<li id="s4"><a href="https://www.tepco.co.jp/ep/notice/pressrelease/2026/pdf/26x4801.pdf">東京電力エナジーパートナー「電気・ガス料金支援の実施に伴う特別措置について」(2026年11月11日)</a></li>
+<li id="s5"><a href="https://www.tepco.co.jp/ep/private/plan/smartlife/index-j.html">東京電力エナジーパートナー「スマートライフ」料金単価(2026年11月1日以降)</a></li>
+<li id="s6"><a href="https://enechange.jp/articles/ecocute-saving">エネチェンジ「エコキュートの電気代を節約するための6つの方法!オール電化の節電術」</a></li>
+<li id="s7"><a href="https://www.ac.daikin.co.jp/customercenter/useful/article/35">ダイキン工業「エコキュートの電気代の実態とは?! 家計にやさしい運用の秘訣を徹底解説」</a></li>
+<li id="s8"><a href="https://www.mitsubishielectric.co.jp/club-me/howto/memo/1412/index.html">三菱電機「夜間電力利用のエコキュートが、昼間も運転することはありますか?」(2014年12月11日)</a></li>
+<li id="s9"><a href="https://www.mitsubishielectric.co.jp/home/ecocute/special/shouene_jigyo/index.html">三菱電機「給湯省エネ2026事業をご存知ですか?」</a></li>
+<li id="s10"><a href="https://www.sunrefre.jp/ecocute/price/">交換できるくん「エコキュートの交換費用相場」(同社の2023年1〜6月の販売実績)</a></li>
+<li id="s11"><a href="https://kyutou-shoene2026.meti.go.jp/overview/">給湯省エネ2026事業「対象要件・補助額」</a></li>
+<li id="s12"><a href="https://kyutou-shoene2026.meti.go.jp/">給湯省エネ2026事業 公式サイト(予算の執行状況)</a></li>
+<li id="s13"><a href="https://kyutou-shoene2026.meti.go.jp/news/2026110601.html">給湯省エネ2026事業「交付申請の受付期限について」(2026年11月6日)</a></li>
+</ol>
+<p class="small">「エコキュート」は関西電力株式会社の登録商標です。この記事は特定の商品やサービスの購入を勧めるものではありません。数字は記載の時点のもので、最新の値は各出典でご確認ください。</p>
+</article>
+</div></main>
+
+<footer class="site"><div class="wrap">
+<p>家の理科 ― 電気とお湯のコストを、理系の目で仕組みから。 <a href="/about/">運営者情報</a> ・ <a href="/privacy/">プライバシーポリシー</a></p>
+</div></footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var peopleTouched=false, counted=false;
+  $('people').addEventListener('input',function(){ if(!peopleTouched){ $('liters').value=Math.round(($('people').value||0)*115); }});
+  $('liters').addEventListener('input',function(){ peopleTouched=true; });
+  function heat(L,tw){ return L*4.186*Math.max(40-tw,0)/3600; } // kWh/日
+  function yen(n){ return Math.round(n).toLocaleString('ja-JP'); }
+  function num(id){ var v=$(id).value; return v===''?NaN:+v; }
+  function cost(L,tw,eta,pn,pd,ds){ // 30日分の円とkWh
+    var kwh=heat(L,tw)/eta*30;
+    var price=pn*(1-ds)+pd*ds;
+    return {kwh:kwh,yen:kwh*price};
+  }
+  $('run').addEventListener('click',function(){
+    var L=num('liters'), tw=num('tw'), eta=num('eta'), pn=num('pnight'), pd=num('pday'),
+        dsv=$('dayshare').value===''?0:+$('dayshare').value, bill=num('bill');
+    var bad=[];
+    if(!(L>=50&&L<=1500)) bad.push('お湯の量は50〜1500Lで入れてください');
+    if(!(tw>=0&&tw<=35)) bad.push('水道水の温度は0〜35℃で入れてください');
+    if(!(eta>=1&&eta<=7)) bad.push('効率は1〜7の数字で入れてください(カタログでは3〜4前後が多い)');
+    if(!(pn>0&&pn<=80)) bad.push('夜の単価を入れてください');
+    if(!(pd>0&&pd<=80)) bad.push('昼の単価を入れてください');
+    if(!(dsv>=0&&dsv<=100)) bad.push('昼の割合は0〜100%で入れてください');
+    if(bad.length){ alert(bad.join('\n')); return; }
+    var ds=dsv/100;
+    var lo=cost(L,tw,eta,pn,pd,ds), hi=cost(L,tw,eta*0.8,pn,pd,ds);
+    var su=cost(L,24,eta,pn,pd,ds);
+    $('o-heat').textContent=heat(L,tw).toFixed(1);
+    $('o-yen').textContent='約 '+yen(lo.yen)+' 〜 '+yen(hi.yen)+' 円';
+    $('o-kwh').textContent='電気の量にすると 約 '+yen(lo.kwh)+' 〜 '+yen(hi.kwh)+' kWh';
+    var max=Math.max(hi.yen,su.yen,1);
+    $('b-summer').style.width=(su.yen/max*100)+'%'; $('t-summer').textContent=yen(su.yen)+'円';
+    $('b-now').style.width=(lo.yen/max*100)+'%'; $('t-now').textContent=yen(lo.yen)+'〜'+yen(hi.yen)+'円';
+    if(bill>0){
+      var a=lo.kwh/bill*100, b=hi.kwh/bill*100, msg;
+      if(b>100) msg='給湯分が検針票の使用量を超えました。入力が合っていないので、お湯の量か水温を確かめてください。';
+      else if(b<40) msg='給湯以外(暖房など)の割合が大きい家です。エコキュート以外も確かめてください(40%は目安です)。';
+      else msg='給湯の割合が大きいので、設定とお湯の使い方の見直しが効きやすい家です。';
+      $('o-share').textContent='検針票の '+yen(bill)+' kWh のうち、給湯分は約 '+Math.round(a)+'〜'+Math.round(b)+'% です。'+msg;
+    } else { $('o-share').textContent=''; }
+    $('out').classList.add('show');
+    if(!counted){ counted=true; try{ history.pushState(null,'',location.pathname+'?calc=1'); }catch(e){} }
+  });
+})();
+</script>
+</body>
+</html>

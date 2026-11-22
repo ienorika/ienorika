@@ -1,0 +1,52 @@
+:root{
+  --ink:#1d2327; --sub:#5b6770; --line:#dfe3e6; --bg:#fbfaf7; --card:#fff;
+  --accent:#1f6f8b; --accent-soft:#e6f1f5; --warn:#a4501b; --warn-soft:#fbefe6;
+  --ok:#2f7a4a; --ok-soft:#e8f4ec;
+}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;color:var(--ink);background:var(--bg);
+  font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif;line-height:1.85}
+a{color:var(--accent)}
+header.site,footer.site{background:#fff;border-bottom:1px solid var(--line)}
+footer.site{border-top:1px solid var(--line);border-bottom:0;margin-top:4rem;font-size:.85rem;color:var(--sub)}
+.wrap{max-width:760px;margin:0 auto;padding:0 1.1rem}
+header.site .wrap{display:flex;justify-content:space-between;align-items:center;height:3.4rem}
+.logo{font-weight:700;text-decoration:none;color:var(--ink);letter-spacing:.04em}
+.logo small{font-weight:400;color:var(--sub);margin-left:.5em;font-size:.75rem}
+nav a{margin-left:1rem;font-size:.85rem;text-decoration:none}
+main{padding:2rem 0}
+h1{font-size:1.55rem;line-height:1.45;margin:.2rem 0 .6rem}
+h2{font-size:1.22rem;margin:2.6rem 0 .8rem;padding-top:.4rem;border-top:2px solid var(--ink)}
+h3{font-size:1.05rem;margin:1.8rem 0 .4rem}
+.meta{color:var(--sub);font-size:.82rem}
+.lead{font-size:1.02rem;background:#fff;border-left:4px solid var(--accent);padding:.9rem 1rem;margin:1.2rem 0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;margin:1.4rem 0}
+.box.warn{background:var(--warn-soft);border-color:#efd2bd}
+.box.ok{background:var(--ok-soft);border-color:#c7e2d0}
+.formula{font-family:"SFMono-Regular",Consolas,monospace;background:#f3f5f6;padding:.7rem .9rem;border-radius:6px;font-size:.9rem;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin:1rem 0}
+th,td{border-bottom:1px solid var(--line);padding:.5rem .4rem;text-align:left;vertical-align:top}
+th{background:#f3f5f6;font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.calc label{display:block;font-weight:600;margin-top:.9rem;font-size:.92rem}
+.calc .hint{font-weight:400;color:var(--sub);font-size:.8rem;display:block}
+.calc input[type=number],.calc select{width:100%;max-width:16rem;font-size:1rem;padding:.45rem .55rem;border:1px solid #b9c2c8;border-radius:6px;background:#fff}
+.calc .row{display:flex;gap:1rem;flex-wrap:wrap}
+.calc .row>div{flex:1 1 14rem}
+.calc .checks label{font-weight:400;margin-top:.35rem}
+button{font-size:1rem;padding:.6rem 1.4rem;margin-top:1.2rem;border:0;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer}
+button:hover{opacity:.9}
+.result{margin-top:1.2rem;display:none}
+.result.show{display:block}
+.big{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.bar{height:14px;background:var(--accent);border-radius:3px;min-width:2px}
+.bars td{padding:.3rem .4rem}
+.bars td:nth-child(2){width:50%}
+.bars td:first-child{white-space:nowrap}
+.small{font-size:.82rem;color:var(--sub)}
+ol.sources{font-size:.8rem;color:var(--sub);padding-left:1.3rem}
+.tag{display:inline-block;font-size:.72rem;padding:.05rem .5rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-right:.3rem}
+.cards a{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin:.8rem 0}
+.cards a:hover{border-color:var(--accent)}
+.cards strong{display:block;color:var(--accent)}
