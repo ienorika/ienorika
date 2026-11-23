@@ -11,7 +11,8 @@ a{color:var(--accent)}
 header.site,footer.site{background:#fff;border-bottom:1px solid var(--line)}
 footer.site{border-top:1px solid var(--line);border-bottom:0;margin-top:4rem;font-size:.85rem;color:var(--sub)}
 .wrap{max-width:760px;margin:0 auto;padding:0 1.1rem}
-header.site .wrap{display:flex;justify-content:space-between;align-items:center;height:3.4rem}
+header.site .wrap{display:flex;justify-content:space-between;align-items:center;min-height:3.4rem;gap:.6rem}
+@media (max-width:520px){.logo small{display:none}nav a{margin-left:.7rem}}
 .logo{font-weight:700;text-decoration:none;color:var(--ink);letter-spacing:.04em}
 .logo small{font-weight:400;color:var(--sub);margin-left:.5em;font-size:.75rem}
 nav a{margin-left:1rem;font-size:.85rem;text-decoration:none}
@@ -50,3 +51,5 @@ ol.sources{font-size:.8rem;color:var(--sub);padding-left:1.3rem}
 .cards a{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin:.8rem 0}
 .cards a:hover{border-color:var(--accent)}
 .cards strong{display:block;color:var(--accent)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.scroll table{min-width:620px}
